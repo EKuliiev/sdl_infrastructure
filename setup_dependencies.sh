@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source $( dirname $( realpath -s $0 ) )/helpers.sh
+
 set -e
 
 trap 'on_abort "Preparation Preparation Open SDL dependencies FAILED"' ERR SIGQUIT SIGTERM SIGINT

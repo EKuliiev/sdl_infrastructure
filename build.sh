@@ -15,7 +15,7 @@ then
     printf "$1\n\n"
 fi
 
-readonly local scriptname=`basename "$0"`;
+readonly local scriptname=$( basename "$0" );
 
 for cmake_gen in "${!cmake_ide_generators[@]}"
 do
@@ -119,8 +119,6 @@ then
     clean_directory $project_binary_dir
 fi
 
-cmake_args+=" -DCMAKE_INSTALL_PREFIX=$install_prefix_path "
-
 if [ $build_unittest = "true" ]
 then
     export ENABLE_TESTS=TESTS_ON
@@ -155,15 +153,16 @@ fi
 
 if [ -f $project_binary_dir/CMakeCache.txt ]
 then
-    make_args+=-j`nproc`
+    make_args+=" -j$( nproc ) "
 else
     # Set one thread for initial build
     # Temporary because of wrong dependencies build fails with multithreaded make mode
-    make_args+=-j1
+    make_args+=" -j1 "
 fi
 
 if [ $perform_install = "true" ]
 then
+    cmake_args+=" -DCMAKE_INSTALL_PREFIX=$install_prefix_path "
     make_args+=" install "
 fi
 

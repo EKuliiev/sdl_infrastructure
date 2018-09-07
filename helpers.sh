@@ -1,17 +1,59 @@
 #!/bin/bash
 
 # returns full path to the script that holds the current line of code
-this_line_location()
-{
-    
-    if [ -n "$ZSH_VERSION" ]; then
-        this_line_location_path="$( dirname $( realpath -s ${(%):-%N} ) )"
-    elif [ -n "$BASH_VERSION" ]; then
+this_line_location() {
+    if [ -n "$ZSH_VERSION" ]
+    then
+        this_line_location_path="$( dirname $( realpath -s ${(%):-%x} ) )"
+    elif [ -n "$BASH_VERSION" ]
+    then
         this_line_location_path="$( dirname $( realpath -s ${BASH_SOURCE[0]} ) )"
     else
-        this_line_location_path="$(cd "$(dirname "${__dir}")" && pwd)"
+        echo "Shell interpreter does NOT supported. Use bash or zsh."
+        exit 1
     fi
     printf $this_line_location_path
+}
+
+# version_compare <v1> <v2> function
+# "=" if equal
+# ">" if v1 greater than v2
+# "<" if v1 less than v2
+version_compare () {
+    if [[ $1 == $2 ]]
+    then
+        printf "="
+        return 0;
+    fi
+
+    local IFS=.
+    local i ver1=($1) ver2=($2)
+    # fill empty fields in ver1 with zeros
+    for ((i=${#ver1[@]}; i<${#ver2[@]}; i++))
+    do
+        ver1[i]=0
+    done
+    for ((i=0; i<${#ver1[@]}; i++))
+    do
+        if [[ -z ${ver2[i]} ]]
+        then
+            # fill empty fields in ver2 with zeros
+            ver2[i]=0
+        fi
+        if ((10#${ver1[i]} > 10#${ver2[i]}))
+        then
+            printf ">"
+            return 0;
+        fi
+        if ((10#${ver1[i]} < 10#${ver2[i]}))
+        then
+            printf "<"
+            return 0;
+        fi
+    done
+
+    printf "="
+    return 0;
 }
 
 clean_directory()
@@ -109,13 +151,33 @@ sync_repo()
     git -C $repo_work_dir submodule update --init || return -1
 }
 
-declare -A cmake_ide_generators
-cmake_ide_generators=(
-    ["codeblocks"]="CodeBlocks - Unix Makefiles"
-    ["codelite"]="CodeLite - Unix Makefiles"
-    ["sublime"]="Sublime Text 2 - Unix Makefiles"
-    ["kate"]="Kate - Unix Makefiles"
-    ["eclipse"]="Eclipse CDT4 - Unix Makefiles" )
+# add_path <var> <path_to_add> [after]
+add_path_to_var()
+{
+    if ! [ $1 ]
+    then
+        printf "$2"
+    else
+        if ! echo "$1" | grep -Eq "(^|:)$2($|:)"
+        then
+            if [ "$3" = "after" ]
+            then
+                printf "$1:$2"
+            else
+                printf "$2:$1"
+            fi
+        else
+            printf "$1"
+        fi
+    fi
+}
+
+typeset -A cmake_ide_generators
+cmake_ide_generators["codeblocks"]="CodeBlocks - Unix Makefiles"
+cmake_ide_generators["codelite"]="CodeLite - Unix Makefiles"
+cmake_ide_generators["sublime"]="Sublime Text 2 - Unix Makefiles"
+cmake_ide_generators["kate"]="Kate - Unix Makefiles"
+cmake_ide_generators["eclipse"]="Eclipse CDT4 - Unix Makefiles"
 
 project_source_dir=$( dirname $( this_line_location ) )
 project_third_party_dir=$project_source_dir/3rd_party

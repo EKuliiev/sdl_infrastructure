@@ -120,13 +120,33 @@ on_success()
     exit $rv
 }
 
+# usage: cur_user_has_write_permissions <dir_to_check>"
+cur_user_has_write_permissions()
+{
+    if [ "$#" -ne 1 ]
+    then
+        printf "false";
+        return -1;
+    fi
+
+    local directory_to_check=$1
+    if [ -w $directory_to_check ]
+    then
+        printf "true"
+    else
+        printf "false"
+    fi
+
+    return 0
+}
+
 sync_repo()
 {
     if [ "$#" -ne 3 ]; then
         echo "#usage sync_repo <work_dir> <link> <hash>"
         return -1
     fi
-    
+
     local repo_work_dir=$1
     local repo_link=$2
     local repo_hash=$3

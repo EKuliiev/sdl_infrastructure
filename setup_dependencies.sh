@@ -13,13 +13,13 @@ echo " ---> Installing SDL required tools.."
 echo " ---> !!!(ROOT PERMISSIONS REQUIRED) Running sudo apt-get update.."
 sudo apt-get update || echo " ---> ERROR: Updating list of available packages failed. Remove invalid links."
 
-tools_to_install+=" bluez-tools sqlite3 automake g++ gcc "
+tools_to_install+=" python bluez-tools sqlite3 automake g++ gcc "
 echo " ---> ROOT PERMISSIONS REQUIRED: Running sudo apt-get install -y $tools_to_install"
 sudo apt-get install -y $tools_to_install
 
 # SDL-core dependencies
 echo " ---> Installing CMake >= 3.0.2.. "
-$build_utils_source_dir/install_cmake.sh "3.0.2"
+$build_utils_source_dir/install_cmake.sh "3.0" "3.0.2"
 
 libs_to_install+=" libusb-1.0-0-dev libbluetooth3 libbluetooth-dev libudev-dev libavahi-client-dev libsqlite3-dev "
 libs_to_install+=" libexpat1-dev qt5-default libqt5websockets5-dev "

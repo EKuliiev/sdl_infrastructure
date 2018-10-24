@@ -1,9 +1,9 @@
 ## This repository contains build, environment setup utils for working with OpenSDL
 
-Tested under Ubuntu 16.04 with default shell
+Tested under Ubuntu 16.04, 17.04, 18.04 with default shell interpreter
 
 ## ******* Prepare ATF for working under host linux for OpenSDL *********
-1. Create directory where you want to store opensdl artifacts.
+1. Create directory where you want to store SDL sources.
 For example:
 ```
 mkdir -p ~/work/OpenSDL
@@ -11,7 +11,7 @@ mkdir -p ~/work/OpenSDL
 2. Clone sdl_infrastructure to your root project directory
 (make shure you are able to work via SSH: [Account SSH keys](https://github.com/settings/keys))
 ```
-git -C ~/work/OpenSDL clone git@github.com:EKuliiev/sdl_infrastructure.git
+git -C ~/work/OpenSDL clone git@github.ford.com:e-kuliie/sdl_infrastructure.git
 ```
 3. Execute script to setup environment:
 ```

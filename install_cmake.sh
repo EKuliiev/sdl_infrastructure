@@ -1,9 +1,10 @@
 #!/bin/bash
 
-[[ $# != 1 ]] && echo "usage: $( basename "$0" ) <cmake-version>. (for instance: $( basename "$0" ) 3.11.4)" && exit 1
+[[ $# != 2 ]] && echo "usage: $( basename "$0" ) <cmake_version_minimum_required> <cmake_version_to_install>. (for instance: $( basename "$0" ) 3.11 3.11.4)" && exit 1
 
 readonly package_name="cmake"
 readonly required_version=$1
+readonly to_install_version=$2
 
 set -e
 
@@ -48,15 +49,15 @@ case $compare_result in
         exit 0; ;;
 esac
 
-libs_to_install+=" openssl libssl1.0-dev "
+libs_to_install+=" openssl libssl-dev "
 echo " ---> Installing required libraries '$libs_to_install' .."
 sudo apt install -y $libs_to_install
 
 echo " ---> Required packages have been successfully installed."
 
-readonly cmake_archive_name="$package_name-$required_version-Linux-x86_64.sh"
-required_major_version=`echo $required_version | cut -d. -f1`
-required_minor_version=`echo $required_version | cut -d. -f2`
+readonly cmake_archive_name="$package_name-$to_install_version-Linux-x86_64.sh"
+required_major_version=`echo $to_install_version | cut -d. -f1`
+required_minor_version=`echo $to_install_version | cut -d. -f2`
 
 readonly target_link="https://cmake.org/files/v$required_major_version.$required_minor_version/$cmake_archive_name"
 readonly load_dir="/tmp"
@@ -66,13 +67,13 @@ chmod +x $load_dir/$cmake_archive_name
 readonly install_prefix_path="/opt/3dparty"
 readonly setenv_filepath="$install_prefix_path/set_env.sh"
 
-sudo mkdir -vp $install_prefix_path/$package_name-$required_version
-sudo $load_dir/$cmake_archive_name --skip-license --exclude-subdir --prefix=$install_prefix_path/$package_name-$required_version
+sudo mkdir -vp $install_prefix_path/$package_name-$to_install_version
+sudo $load_dir/$cmake_archive_name --skip-license --exclude-subdir --prefix=$install_prefix_path/$package_name-$to_install_version
 
 rm -f $load_dir/$cmake_archive_name
 
 printf '# !!!This script MUST be sourced\n\n' | sudo tee $setenv_filepath > /dev/null
-printf "PATH=$install_prefix_path/$package_name-$required_version/bin:"'$PATH' | sudo tee -a $setenv_filepath > /dev/null
+printf "PATH=$install_prefix_path/$package_name-$to_install_version/bin:"'$PATH' | sudo tee -a $setenv_filepath > /dev/null
 printf '\n\necho PATH=$PATH\n' | sudo tee -a $setenv_filepath > /dev/null
 
 readonly sh_conf_marker="#ser_customized_part"
@@ -91,5 +92,5 @@ then
 fi
 
 source $setenv_filepath
-echo " ---> CMake $required_version installed."
+echo " ---> CMake $to_install_version installed."
 echo -e " \033[31m---> You should reboot the system to apply changes OR just perform in your current shell 'exec <shell>' where <shell> is bash or zsh, etc.\033[0m"

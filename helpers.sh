@@ -9,7 +9,7 @@ this_line_location() {
     then
         this_line_location_path="$( dirname $( realpath -s ${BASH_SOURCE[0]} ) )"
     else
-        echo "Shell interpreter does NOT supported. Use bash or zsh."
+        >&2 echo "Shell interpreter does NOT supported. Use bash or zsh."
         exit 1
     fi
     printf $this_line_location_path
@@ -70,7 +70,7 @@ on_abort()
 {
     if [ "$#" -eq 0 ]
     then
-        echo "Usage: $FUNCNAME message" >&2
+        echo ">&2 usage: $FUNCNAME message" >&2
         exit 1
     fi
 
@@ -87,7 +87,7 @@ on_startup()
 {
     if [ "$#" -eq 0 ]
     then
-        echo "Usage: $FUNCNAME message" >&2
+        >&2 echo "usage: $FUNCNAME message" >&2
         exit 1
     fi
 
@@ -102,13 +102,8 @@ on_success()
     local readonly rv=$?
     if [ "$#" -eq 0 ]
     then
-        echo "Usage: $FUNCNAME message" >&2
+        >&2 echo "usage: $FUNCNAME message" >&2
         exit 1
-    fi
-
-    if [ $rv -ne 0 ]
-    then
-        on_abort $@
     fi
 
     echo "
@@ -143,7 +138,7 @@ cur_user_has_write_permissions()
 sync_repo()
 {
     if [ "$#" -ne 3 ]; then
-        echo "#usage sync_repo <work_dir> <link> <hash>"
+        >&2 echo "usage: sync_repo <work_dir> <link> <hash>"
         return -1
     fi
 
@@ -165,6 +160,7 @@ sync_repo()
       git_branch_name="tmp"
     fi
 
+    git -C $repo_work_dir remote set-url origin "$repo_link" || return -1
     git -C $repo_work_dir checkout -B $git_branch_name || return -1
     git -C $repo_work_dir fetch --all --prune || return -1
     git -C $repo_work_dir reset --hard $repo_hash || return -1
@@ -190,6 +186,19 @@ add_path_to_var()
             printf "$1"
         fi
     fi
+}
+
+# get_ip_by_interface_name <interface_name>
+get_ip_by_interface_name()
+{
+    if [ "$#" -ne 1 ]; then
+        >&2 echo "usage: get_ip_by_interface_name <interface_name>"
+        return -1
+    fi
+
+    local interface_name="$1"
+    local ip_addr=$( ifconfig $interface_name | grep 'inet addr:'| cut -d: -f2 | awk '{ print $1}' )
+    printf "$ip_addr"
 }
 
 typeset -A cmake_ide_generators

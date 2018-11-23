@@ -49,7 +49,16 @@ case $compare_result in
         exit 0; ;;
 esac
 
-libs_to_install+=" openssl libssl-dev "
+# Install exactly libssl version 1.0.*
+# SDL currently requires exactly version 1.0.*
+readonly lsb_release_version=$(lsb_release -rs)
+version_compare_result=$(version_compare $lsb_release_version "16.99")
+case $version_compare_result in
+  "="|"<") libs_to_install+=" libssl-dev=1.0.* ";;
+  ">") libs_to_install+=" libssl1.0-dev " ;;
+esac
+
+libs_to_install+=" openssl "
 echo " ---> Installing required libraries '$libs_to_install' .."
 sudo apt install -y $libs_to_install
 

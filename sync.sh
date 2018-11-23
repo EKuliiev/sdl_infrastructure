@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#!/bin/bash
-
 source $( dirname $( realpath -s $0 ) )/helpers.sh
 
 trap 'on_abort "Loading SDL components FAILED"' ERR SIGQUIT SIGTERM SIGINT
@@ -66,15 +64,15 @@ echo "Project root source dir: $project_source_dir"
 
 if [ $load_type == "ssh" ]
 then
-    sync_repo "$project_source_dir/sdl_infrastructure" "git@github.com:EKuliiev/sdl_infrastructure.git" "origin/master"
     sync_repo "$project_source_dir/sdl_core" "git@github.com:smartdevicelink/sdl_core.git" "origin/develop"
-    sync_repo "$project_source_dir/sdl_atf" "git@github.com:smartdevicelink/sdl_atf.git" "origin/develop"
+    sync_repo "$project_source_dir/sdl_atf" "git@github.com:smartdevicelink/sdl_atf.git" "origin/feature/script_runner"
     sync_repo "$project_source_dir/sdl_atf_test_scripts" "git@github.com:smartdevicelink/sdl_atf_test_scripts.git" "origin/develop"
     sync_repo "$project_source_dir/sdl_hmi" "git@github.com:smartdevicelink/sdl_hmi.git" "origin/develop"
+    sync_repo "$project_source_dir/sdl_infrastructure" "git@github.com:EKuliiev/sdl_infrastructure.git" "origin/master"
 else
-    sync_repo "$project_source_dir/sdl_atf" "https://github.com/EKuliiev/sdl_infrastructure.git" "origin/master"
     sync_repo "$project_source_dir/sdl_core" "https://github.com/smartdevicelink/sdl_core.git" "origin/develop"
-    sync_repo "$project_source_dir/sdl_atf" "https://github.com/smartdevicelink/sdl_atf.git" "origin/develop"
+    sync_repo "$project_source_dir/sdl_atf" "https://github.com/smartdevicelink/sdl_atf.git" "origin/feature/script_runner"
     sync_repo "$project_source_dir/sdl_atf_test_scripts" "https://github.com/smartdevicelink/sdl_atf_test_scripts.git" "origin/develop"
     sync_repo "$project_source_dir/sdl_hmi" "https://github.com/smartdevicelink/sdl_hmi.git" "origin/develop"
+    sync_repo "$project_source_dir/sdl_atf" "https://github.com/EKuliiev/sdl_infrastructure.git" "origin/master"
 fi

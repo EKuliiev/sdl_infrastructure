@@ -10,5 +10,5 @@ source $build_utils_source_dir/setup_runtime_env.sh
 
 ulimit -c unlimited
 
-$sdl_atf_source_dir/run.sh $project_binary_dir/bin $1 $sdl_core_api_dir
+$sdl_atf_source_dir/start.sh --sdl-interfaces=$sdl_core_api_dir $project_binary_dir/bin $@
 

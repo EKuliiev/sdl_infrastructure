@@ -74,5 +74,5 @@ else
     sync_repo "$project_source_dir/sdl_atf" "https://github.com/smartdevicelink/sdl_atf.git" "origin/feature/script_runner"
     sync_repo "$project_source_dir/sdl_atf_test_scripts" "https://github.com/smartdevicelink/sdl_atf_test_scripts.git" "origin/develop"
     sync_repo "$project_source_dir/sdl_hmi" "https://github.com/smartdevicelink/sdl_hmi.git" "origin/develop"
-    sync_repo "$project_source_dir/sdl_atf" "https://github.com/EKuliiev/sdl_infrastructure.git" "origin/master"
+    sync_repo "$project_source_dir/sdl_infrastructure" "https://github.com/EKuliiev/sdl_infrastructure.git" "origin/master"
 fi

@@ -9,9 +9,15 @@ For example:
 mkdir -p ~/work/OpenSDL
 ```
 2. Clone sdl_infrastructure to your root project directory
-(make shure you are able to work via SSH: [Account SSH keys](https://github.com/settings/keys))
+(make shure you are able to work via SSH: [Account SSH keys](https://github.com/settings/keys) or use HTTPS instead)
+
+via SSH:
 ```
-git -C ~/work/OpenSDL clone git@github.ford.com:e-kuliie/sdl_infrastructure.git
+git -C ~/work/OpenSDL clone git@github.com:EKuliiev/sdl_infrastructure.git
+```
+OR via HTTPS:
+```
+git -C ~/work/OpenSDL clone https://github.com/EKuliiev/sdl_infrastructure.git
 ```
 3. Execute script to setup environment:
 ```
